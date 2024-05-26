@@ -1,5 +1,5 @@
 <?php
-//Arrays
+//Lesson3: Arrays
 
 $arr = [1, 2, 3, 7, 31, 4, 1, 8, 6];
 echo "<pre>\$arr = [1, 2, 3, 7, 31, 4, 1, 8, 6]</pre><br>";
