@@ -1,173 +1,96 @@
 <?php
-//Lesson3: Arrays
+//Lesson 4: Functions
 
-$arr = [1, 2, 3, 7, 31, 4, 1, 8, 6];
-echo "<pre>\$arr = [1, 2, 3, 7, 31, 4, 1, 8, 6]</pre><br>";
+// Создать функцию принимающую массив произвольной вложенности и определяющий любой элемент номер которого передан параметром во всех вложенных массивах.
 
+function find_element(array $array, int $index): array
+{
+  $result = [];
 
-echo "1. посчитать длину массива:" . sizeof($arr) . "<br>";
-$arr_start = array_slice($arr, 0, 4);
-$arr_end = array_splice($arr, 4);
-$result = array_merge($arr_end, $arr_start);
-
-echo "2. переместить первые 4 элемента массива в конец массива: ";
-$last_value = end($result);
-foreach ($result as $value) {
-  if ($value !== $last_value) {
-    echo $value . ', ';
-  } else {
-    echo $value;
+  foreach ($array as $key => $value) {
+    if (is_array($value)) {
+      $result = array_merge($result, find_element($value, $index));
+    } elseif ($key === $index) {
+      $result[] = $value;
+    }
   }
+
+  return $result;
 }
-echo "<br>";
 
-echo "3. получить сумму 4,5,6 элемента: ";
-$arr = [1, 2, 3, 7, 31, 4, 1, 8, 6];
-$sum = array_slice($arr, 3, 3);
-$last = end($sum);
-foreach ($sum as $value) {
-  if ($value !== $last) {
-    echo $value . ' + ';
-  } else {
-    echo $value;
-  }
-}
-echo " = " . array_sum($sum) . "<br>";
-
-
-echo "<br>";
-echo "<pre>\$firstArr = [
-  'one' => 1,
-  'two' => 2,
-  'three' => 3,
-  'foure' => 5,
-  'five' => 12,
+$index = 1;
+$array = [
+  [1, 2, [3, 4]],
+  [5, 6, [7, 8]],
+  [9, 10]
 ];
 
-\$secondArr = [
-  'one' => 1,
-  'seven' => 22,
-  'three' => 32,
-  'foure' => 5,
-  'five' => 13,
-  'six' => 37,
-];</pre>";
+var_dump(find_element($array, $index));
+echo '<br>';
 
-$firstArr = [
-  'one' => 1,
-  'two' => 2,
-  'three' => 3,
-  'four' => 5,
-  'five' => 12,
-];
 
-$secondArr = [
-  'one' => 1,
-  'seven' => 22,
-  'three' => 32,
-  'four' => 5,
-  'five' => 13,
-  'six' => 37,
-];
 
-function printValues($result) {
-  $last_value = end($result);
-  foreach ($result as $value) {
-      if ($value !== $last_value) {
-          echo $value . ', ';
-      } else {
-          echo $value;
+// Создать функцию которая считает все буквы b в переданной строке, в случае если передается не строка функция должна возвращать false
+
+function find_letter(string $sentence, string $letter = 'b'): int
+{
+  $result = NULL;
+
+  if (is_string($sentence)) {
+
+    $letters = (array) str_split($sentence);
+    foreach ($letters as $key => $value) {
+      $value = strtolower($value);
+      if ($value == $letter) {
+        $result += 1;
       }
+    }
+    return $result;
   }
 }
+$sentence = "Happy birthday Benjamin Franklin";
 
-echo "4. найти все элементы которые отсутствуют в первом массиве и присутствуют во втором: ";
-$result = array_diff($secondArr, $firstArr);
-printValues($result);
-echo "<br>";
-
-echo "5. найти все элементы которые отсутствуют в первом массиве и присутствуют во втором: ";
-$result = array_diff($firstArr, $secondArr);
-printValues($result);
-echo "<br>";
-
-echo "6. найти все элементы значения которых совпадают: ";
-$result = array_intersect($firstArr, $secondArr);
-printValues($result);
-echo "<br>";
-
-echo "7. найти все элементы значения которых отличается: ";
-$result = array_intersect($firstArr, $secondArr);
-$result = array_merge(array_diff($firstArr, $secondArr), array_diff($secondArr, $firstArr));
-printValues($result);
-echo "<br>";
+echo find_letter($sentence);
+echo '<br>';
 
 
-echo "<pre> \$firstArr = [
-  'one' => 1,
-  'two' => [
-    'one' => 1,
-    'seven' => 22,
-    'three' => 32,
-  ],
-  'three' => [
-    'one' => 1,
-    'two' => 2,
-  ],
-  'four' => 5,
-  'five' => [
-   'three' => 32,
-   'foure' => 5,
-   'five' => 12,
-  ],
-];</pre>";
-$firstArr = [
-  'one' => 1,
-  'two' => [
-    'one' => 1,
-    'seven' => 22,
-    'three' => 32,
-  ],
-  'three' => [
-    'one' => 1,
-    'two' => 2,
-  ],
-  'four' => 5,
-  'five' => [
-    'three' => 32,
-    'foure' => 5,
-    'five' => 12,
-  ],
-];
+// Создать функцию которая считает сумму значений всех элементов массива произвольной глубины
 
-echo "8. получить все вторые элементы вложенных массивов: ";
-foreach ($firstArr as $array) {
-  if (is_array($array)) {
+function count_summ(array $array): int | float | NULL
+{
+  $result = NULL;
+  foreach ($array as $element) {
 
-    echo "<br>";
-    foreach (array_slice($array, 1, 1) as $key => $val) {
-      echo $val;
+    if (is_array($element)) {
+      $result += count_summ($element);
+    } else {
+      $result += $element;
     }
   }
-};
-echo "<br>";
-echo "<br>";
+  return $result;
+}
 
-echo "9. получить общее количество элементов в массиве: ";
-foreach ($firstArr as $firstLevel) {
-  if (!is_array($firstLevel)) {
-    $top[] = $firstLevel;
+//var_dump(recursive_summ([range("a","j"), range('F','X')]));
+
+
+echo (count_summ([range('1', '2'), range('1', '2')]));
+echo '<br>';
+
+// Создать функцию которая определит сколько квадратов меньшего размера можно вписать в квадрат большего размера размер возвращать в float
+
+function count_squares(int $bigger_side, int $smaller_side): int | float | NULL
+{
+  $squares = NULL;
+
+  if ($smaller_side <= 0 || $bigger_side <= 0) {
+    echo 'error';
+    return NULL;
   } else {
-    foreach ($firstLevel as $secondLevel) {
-      $inner[] = $secondLevel;
-    }
+    $square_side = $bigger_side / $smaller_side;
+    $squares = $square_side * $square_side;
   }
-};
-$result = array_merge($top, $inner);
-echo count($result);
-echo "<br>";
 
-echo "10. получить сумму всех значений в массиве: ";
-$result = array_sum($result);
-print_r($result);
-echo "<br>";
+  return $squares;
+}
+
+echo count_squares(30, 3);
