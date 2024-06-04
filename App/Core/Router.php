@@ -9,13 +9,16 @@ class Router {
         if (!empty($_SERVER["REDIRECT_URL"])){
             $separateUrl = explode('/',$_SERVER["REDIRECT_URL"]);
             $route = ucfirst($separateUrl[1]);
-            echo $route;
+           // echo $route;
         }else{
-            $route = 'Main';
+            $route = 'Home';
         }
 
         if (!empty($separateUrl[2])){
             $methodNames = ['Index', ucfirst($separateUrl[2])];
+            
+            $methodNames = array_unique($methodNames);
+            var_dump($methodNames);
         }else{
             $methodNames = ['Index'];
         }
