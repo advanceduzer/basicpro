@@ -7,14 +7,20 @@ class Router {
     public function run() : void 
     {
         if (!empty($_SERVER["REDIRECT_URL"])){
-            //var_dump($_SERVER["REDIRECT_URL"]);
             $separateUrl = explode('/',$_SERVER["REDIRECT_URL"]);
             $route = ucfirst($separateUrl[1]);
-            // var_dump($route);
-        }
-        else{
+            echo $route;
+        }else{
             $route = 'Main';
         }
+
+        if (!empty($separateUrl[2])){
+            $methodNames = ['Index', ucfirst($separateUrl[2])];
+        }else{
+            $methodNames = ['Index'];
+        }
+
+
         $controllerNameSpace = self::CONTROLLER_PATH . $route;
     
 
@@ -22,7 +28,16 @@ class Router {
             $controllerNameSpace = self::CONTROLLER_PATH . 'Error';
         } 
         $controller = new $controllerNameSpace();
-        $controller->index();
+
+
+   foreach ($methodNames as $methodName){
+    if(!method_exists($controller, $methodName)){
+            $controllerNameSpace = self::CONTROLLER_PATH . 'Error';
+            $controller = new $controllerNameSpace();
+            $methodName = 'index';
+        }        
+        $controller->$methodName();
+   }
     }
 }
 
