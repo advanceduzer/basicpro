@@ -18,7 +18,7 @@ class Router {
             $methodNames = ['Index', ucfirst($separateUrl[2])];
             
             $methodNames = array_unique($methodNames);
-            var_dump($methodNames);
+            //var_dump($methodNames);
         }else{
             $methodNames = ['Index'];
         }
