@@ -1,46 +1,41 @@
-<?php 
+<?php
 
 namespace App\Core;
 
-class Router {
+class Router
+{
     private const CONTROLLER_PATH = 'App\\Controllers\\';
-    public function run() : void 
+    public function run(): void
     {
-        if (!empty($_SERVER["REDIRECT_URL"])){
-            $separateUrl = explode('/',$_SERVER["REDIRECT_URL"]);
+        if (!empty($_SERVER["REDIRECT_URL"])) {
+            $separateUrl = explode('/', $_SERVER["REDIRECT_URL"]);
             $route = ucfirst($separateUrl[1]);
-           // echo $route;
-        }else{
+            // echo $route;
+        } else {
             $route = 'Home';
         }
 
-        if (!empty($separateUrl[2])){
+        if (!empty($separateUrl[2])) {
             $methodNames = ['Index', ucfirst($separateUrl[2])];
-            
             $methodNames = array_unique($methodNames);
-            //var_dump($methodNames);
-        }else{
+        } else {
             $methodNames = ['Index'];
         }
 
-
         $controllerNameSpace = self::CONTROLLER_PATH . $route;
-    
 
-        if(!class_exists($controllerNameSpace)){
+        if (!class_exists($controllerNameSpace)) {
             $controllerNameSpace = self::CONTROLLER_PATH . 'Error';
-        } 
+        }
         $controller = new $controllerNameSpace();
 
-
-   foreach ($methodNames as $methodName){
-    if(!method_exists($controller, $methodName)){
-            $controllerNameSpace = self::CONTROLLER_PATH . 'Error';
-            $controller = new $controllerNameSpace();
-            $methodName = 'index';
-        }        
-        $controller->$methodName();
-   }
+        foreach ($methodNames as $methodName) {
+            if (!method_exists($controller, $methodName)) {
+                $controllerNameSpace = self::CONTROLLER_PATH . 'Error';
+                $controller = new $controllerNameSpace();
+                $methodName = 'index';
+            }
+            $controller->$methodName();
+        }
     }
 }
-
