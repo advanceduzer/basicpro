@@ -1,11 +1,11 @@
 <?php  
 namespace App\Controllers;
 
-class Post
+class Home
 {
     public function index(){
 
-        var_dump("Hello, I\'m Post");
+        var_dump("Hello, I'm Home");
     }
 
 }
