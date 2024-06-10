@@ -1,16 +1,18 @@
-<?php  
+<?php
+
 namespace App\Controllers;
+
+use App\Core\Viewer;
 
 class Gallery
 {
-    public function index(){
-
-        var_dump("Hello, I'm Gallery");
+    public function index()
+    {
+        Viewer::view("gallery/index");
     }
 
-    public function tag(){
-
-        var_dump("Hello, I'm Gallery's Tag");
+    public function tag()
+    {
+        Viewer::view("gallery/tag");
     }
-
 }

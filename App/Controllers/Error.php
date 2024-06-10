@@ -1,11 +1,14 @@
-<?php  
+<?php
+
 namespace App\Controllers;
+
+use App\Core\Viewer;
 
 class Error
 {
-    public function index(){
+    public function index()
+    {
 
-        var_dump("404");
+        Viewer::view("error/index");
     }
-
 }
