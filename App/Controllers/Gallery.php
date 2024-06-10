@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Core\Viewer;
+
 class Gallery
 {
     public function index()
     {
-
-        var_dump("Hello, I'm Gallery");
+        Viewer::view("gallery/index");
     }
 
     public function tag()
     {
-
-        var_dump("Hello, I'm Gallery's Tag");
+        Viewer::view("gallery/tag");
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Core\Viewer;
+
 class Home
 {
     public function index()
     {
 
-        var_dump("Hello, I'm Home");
+        Viewer::view("home/index");
     }
 }
