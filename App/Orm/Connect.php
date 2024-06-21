@@ -27,7 +27,7 @@ class Connect
 
     private function initConfig()
     {
-        $config = require_once __DIR__ . '/../../config/dbConfig.php';
+        $config = require __DIR__ . '/../../config/dbConfig.php';
 
         $this->dns = $config['driver'] . ':host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['dbname'];
         $this->user = $config['user'];

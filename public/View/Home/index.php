@@ -7,14 +7,20 @@
 
 <body>
     <p>Home - Index</p>
-    <table>
+    <table style="text-align:left;">
+        <tr>
+            <th style="font-weight:700">Post ID</th>
+            <th style="font-weight:700">Author ID</th>
+            <th style="font-weight:700">Title</th>
+            <th style="font-weight:700">Text</th>
+        </tr>
         <?php foreach ($data as $key => $row) : ?>
+
             <tr>
-                <td><?= $row['id'] ?><td>
-                <td><?= $row['author_id'] ?><td>
-                <td><?= $row['author'] ?><td>
-                <td><?= $row['title'] ?><td>
-                <td><?= $row['body'] ?><td>
+                <td><?= isset($row['id']) ? $row['id'] : '' ?></td>
+                <td><?= isset($row['author_id']) ? $row['author_id'] : '' ?></td>
+                <td><?= isset($row['title']) ? $row['title'] : '' ?></td>
+                <td><?= isset($row['body']) ? $row['body'] : '' ?></td>
             </tr>
         <?php endforeach ?>
     </table>
