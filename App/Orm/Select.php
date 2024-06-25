@@ -6,18 +6,22 @@ use PDO;
 
 class Select
 {
-    private string|array $field = 'author_id';
-    private string|array $tableName;
-    private string|array $groupBy;
-    private string|array $orderBy;
-    private string|array $limit;
+    private string|array $field = '*';
+    private string|array $tableName = '';
+    private string|array $groupBy = '';
+    private string|array $orderBy = '';
+    private string $limit = '';
 
 
     private PDO $connect;
+    private Where $where;
+
 
     public function __construct()
     {
         $this->connect = (new Connect())->getConnect();
+        $this->where = new Where();
+        // var_dump($this->where);
     }
 
     public function setField($field): void
@@ -61,7 +65,13 @@ class Select
 
     public function getOrderBy()
     {
-        if (!is_array($this->orderBy)) {
+        if (is_array($this->orderBy)) {
+            $orderItem = [];
+            foreach ($this->orderBy as $key => $value) {
+                $orderItem[] = $key . " " . $value;
+            }
+            return implode(", ", $orderItem);
+        } else {
             return $this->orderBy;
         }
     }
@@ -75,23 +85,46 @@ class Select
 
     public function getLimit()
     {
-        if (!is_array($this->limit)) {
-            return $this->limit;
-        }
+        return $this->limit;
     }
+
+    public function andWhere(string|array $condition): void
+    {
+        $this->where->andWhere($condition);
+    }
+
+    public function orWhere(string|array $condition): void
+    {
+        $this->where->orWhere($condition);
+    }
+
+
+
 
     public function build(): string
     {
         $sql =
             "SELECT " . $this->getField() .
-            ", COUNT(*) AS id" .
-            " FROM " . $this->getTableName() .
-            " GROUP BY " . $this->getGroupBy() .
-            ", " . $this->getField() . 
-            " ORDER BY " . $this->getOrderBy() .
-            " LIMIT " . $this->getLimit();
-    
-            echo ($sql);
+            " FROM " . $this->getTableName();
+
+        if (!empty($this->where->getWhere())) {
+            $sql .= " WHERE " . $this->where->getWhere();
+        }
+
+        if (!empty($this->getGroupBy())) {
+            $sql .= " GROUP BY " . $this->getGroupBy();
+        }
+        if (!empty($this->getOrderBy())) {
+            $sql .= " ORDER BY " . $this->getOrderBy();
+        }
+        if (!empty($this->getLimit())) {
+            $sql .= " LIMIT " . $this->getLimit();
+        }
+
+
+
+
+        var_dump($sql);
 
         return $sql;
     }

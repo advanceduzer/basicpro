@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Post {
+class Gallery {
     public function findOne(){
         return [
             'id' => 1,
