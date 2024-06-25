@@ -7,9 +7,9 @@ use App\Orm\Select;
 class Post
 {
     protected $tableName = 'post';
-    protected $orderBy = 'author_id';
-    protected $groupBy = 'author_id';
-    protected $limit = '0,100';
+    //     protected $orderBy = 'author_id DESC';
+    //     protected $groupBy = 'author_id';
+    //    protected $limit = '1,2';
 
     private Select $select;
 
@@ -31,9 +31,16 @@ class Post
     public function findAll(): ?array
     {
         $this->select->setTableName($this->tableName);
-        $this->select->setGroupBy($this->groupBy);
-        $this->select->setOrderBy($this->orderBy);
-        $this->select->setLimit($this->limit);
+        // $this->select->andWhere('id=1');
+        $this->select->andWhere('author_id=2');
+        //     $this->select->setField('author_id, COUNT(*) AS COUNT');
+        //    $this->select->setGroupBy('author_id');
+        //     $this->select->setOrderBy([
+        //         'author_id' => 'DESC',
+        //         'title' => 'ASC'
+        //     ]);
+        //    $this->select->setLimit($this->limit);
+        //    var_dump($this->select->execute());
         return $this->select->execute();
     }
 }
