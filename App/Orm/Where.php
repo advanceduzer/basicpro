@@ -6,15 +6,20 @@ class Where
 {
     private string $conditions = '';
 
-    public function andWhere(string|array $condition): void
+    public function andWhere(string|array $conditions): void
     {
         if (!empty($this->conditions)) {
             $this->conditions .= ' AND ';
         }
-        if (is_array($condition)) {
-            $this->conditions .= '(' . implode(' AND ', $condition) . ')';
+        if (is_array($conditions)) {
+            $whereItem =[];
+            foreach ($conditions as $condition) {
+                $whereItem[] = $condition['field']. $condition['operator']. $condition['value'];
+            }
+             $this->conditions .= implode(" AND ", $whereItem);
+
         } else {
-            $this->conditions .= $condition;
+            $this->conditions .= $conditions;
         }
     }
 

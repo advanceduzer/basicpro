@@ -15,12 +15,14 @@ class Select
 
     private PDO $connect;
     private Where $where;
+    private Join $join;
 
 
     public function __construct()
     {
         $this->connect = (new Connect())->getConnect();
         $this->where = new Where();
+        $this->join = new Join();
         // var_dump($this->where);
     }
 
@@ -98,7 +100,15 @@ class Select
         $this->where->orWhere($condition);
     }
 
+    public function getJoin()
+    {
+        return $this->join->getJoin();
+    }
 
+    public function join()
+    {
+        return $this->join;
+    }
 
 
     public function build(): string
@@ -106,7 +116,9 @@ class Select
         $sql =
             "SELECT " . $this->getField() .
             " FROM " . $this->getTableName();
-
+        if (!empty($this->getJoin())) {
+            $sql .= " " . $this->getJoin();
+        }
         if (!empty($this->where->getWhere())) {
             $sql .= " WHERE " . $this->where->getWhere();
         }
@@ -120,6 +132,7 @@ class Select
         if (!empty($this->getLimit())) {
             $sql .= " LIMIT " . $this->getLimit();
         }
+
 
 
 
