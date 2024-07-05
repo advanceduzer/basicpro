@@ -45,7 +45,7 @@ class Home
         $post->insert($postContent);
 
         var_dump( $_POST);
-        header('Location: /');
+       header('Location: /');
  
     }
     
