@@ -35,7 +35,6 @@ class Insert
 
         } else {
             $this->tableName = $tableName;
-           // $this->tableAlias = $tableName;
         }
         $this->where->setTableAlias($this->tableAlias);
 
@@ -54,11 +53,8 @@ class Insert
             $keys = array_keys($this->postContent);
             $values = array_values($this->postContent);
             
-            $keys_str = implode(", ", $keys);
-            $values_str = "'" . implode("', '", $values) . "'";
-            
-            $cols = $keys_str;
-            $vals = $values_str;
+            $cols = implode(", ", $keys);
+            $vals = "'" . implode("', '", $values) . "'";
             
             return ['cols' => $cols, 'vals' => $vals];
             
@@ -74,9 +70,6 @@ class Insert
 
     public function build(): string
     {
-
-        //INSERT INTO post (title, body, author_id) VALUES ('Заголовок поста 1', 'Содержание поста 1', 1);
-
         $postContent = $this->getPostContent();
 
         $sql = 
