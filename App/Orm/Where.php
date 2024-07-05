@@ -5,16 +5,35 @@ namespace App\Orm;
 class Where
 {
     private string $conditions = '';
+    private string $tableAlias = '';
 
-    public function andWhere(string|array $condition): void
+    public function setTableAlias(string $tableName): void
+    {
+        $this->tableAlias = substr($tableName, 0, 1);
+    }
+
+    public function getTableAlias(): string
+    {
+        return $this->tableAlias;
+    }
+
+
+    public function andWhere(string|array $conditions): void
     {
         if (!empty($this->conditions)) {
             $this->conditions .= ' AND ';
         }
-        if (is_array($condition)) {
-            $this->conditions .= '(' . implode(' AND ', $condition) . ')';
+        if (is_array($conditions)) {
+            $whereItem =[];
+            foreach ($conditions as $condition) {
+                $whereItem[] = $this->tableAlias . '.' . $condition['field'] . $condition['operator'] . $condition['value'];
+
+
+            }
+             $this->conditions .= implode(" AND ", $whereItem);
+
         } else {
-            $this->conditions .= $condition;
+            $this->conditions .= $conditions;
         }
     }
 

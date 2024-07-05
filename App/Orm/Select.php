@@ -6,21 +6,26 @@ use PDO;
 
 class Select
 {
+    private string $tableAlias = '';
     private string|array $field = '*';
     private string|array $tableName = '';
     private string|array $groupBy = '';
     private string|array $orderBy = '';
     private string $limit = '';
 
+    //private string $mainAlias = '';
+
 
     private PDO $connect;
     private Where $where;
+    private Join $join;
 
 
     public function __construct()
     {
         $this->connect = (new Connect())->getConnect();
         $this->where = new Where();
+        $this->join = new Join();
         // var_dump($this->where);
     }
 
@@ -31,7 +36,19 @@ class Select
 
     public function setTableName($tableName): void
     {
-        $this->tableName = $tableName;
+        if (is_array($tableName)){
+            foreach ($tableName as $alias => $name){
+                $this->tableAlias = $alias;
+                $this->tableName = $name;
+                break;
+            }
+
+        } else {
+            $this->tableName = $tableName;
+            $this->tableAlias = $tableName;
+        }
+        $this->where->setTableAlias($this->tableAlias);
+
     }
 
     public function setOrderBy($orderBy): void
@@ -58,9 +75,7 @@ class Select
 
     public function getTableName()
     {
-        if (!is_array($this->tableName)) {
-            return $this->tableName;
-        }
+        return $this->tableName. ' ' . $this->tableAlias;
     }
 
     public function getOrderBy()
@@ -98,7 +113,15 @@ class Select
         $this->where->orWhere($condition);
     }
 
+    public function getJoin()
+    {
+        return $this->join->getJoin();
+    }
 
+    public function join()
+    {
+        return $this->join;
+    }
 
 
     public function build(): string
@@ -106,7 +129,10 @@ class Select
         $sql =
             "SELECT " . $this->getField() .
             " FROM " . $this->getTableName();
-
+            
+        if (!empty($this->getJoin())) {
+            $sql .= " " . $this->getJoin();
+        }
         if (!empty($this->where->getWhere())) {
             $sql .= " WHERE " . $this->where->getWhere();
         }
@@ -120,6 +146,7 @@ class Select
         if (!empty($this->getLimit())) {
             $sql .= " LIMIT " . $this->getLimit();
         }
+
 
 
 
