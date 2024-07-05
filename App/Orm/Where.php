@@ -5,6 +5,18 @@ namespace App\Orm;
 class Where
 {
     private string $conditions = '';
+    private string $tableAlias = '';
+
+    public function setTableAlias(string $tableName): void
+    {
+        $this->tableAlias = substr($tableName, 0, 1);
+    }
+
+    public function getTableAlias(): string
+    {
+        return $this->tableAlias;
+    }
+
 
     public function andWhere(string|array $conditions): void
     {
@@ -14,7 +26,9 @@ class Where
         if (is_array($conditions)) {
             $whereItem =[];
             foreach ($conditions as $condition) {
-                $whereItem[] = $condition['field']. $condition['operator']. $condition['value'];
+                $whereItem[] = $this->tableAlias . '.' . $condition['field'] . $condition['operator'] . $condition['value'];
+
+
             }
              $this->conditions .= implode(" AND ", $whereItem);
 

@@ -3,47 +3,81 @@
 namespace App\Models;
 
 use App\Orm\Select;
+use App\Orm\Delete;
+use App\Orm\Insert;
 
 class Post
 {
     private Select $select;
+    private Delete $delete;
+    private Insert $insert;
 
     public function __construct()
     {
         $this->select = new Select();
+        $this->delete = new Delete();
+        $this->insert = new Insert();
     }
 
-    public function findOne()
+    public function delete(int $id)
     {
-        return [
-            'id' => 1,
-            'author_id' => 1,
-            'author' => "author1",
-            'title' => 'post title',
-            'body' => 'text'
-        ];
+        $this->delete->setTableName(['p' => 'post']);
+        $this->delete->andWhere([[
+                    'field' => 'id',
+                    'operator' => '=',
+                    'value' => $id,
+                ]]);
+        return $this->delete->execute();
     }
-    public function findAll(): ?array
+
+
+    public function insert(array $postContent)
     {
-        //$this->select->setTableName($this->tableName);
-        $this->select->setTableName('post p');
+        $this->insert->setTableName('post');
+        $this->insert->setPostContent( $postContent );
+        return $this->insert->execute();
+                    var_dump($this->insert->execute());
+
+    }
+
+
+    public function findOne(int $id)
+    {
+        $this->select->setTableName(['p' => 'post']);
         $this->select->setField('p.id, p.author_id, u.fullName, p.title, p.body');
         $this->select->join()->inner([[
             'table' => ['u' => 'user'],
             'condition' => 'u.id = p.author_id'
         ]]);
-        $this->select->andWhere([
-            [
-                'field' => 'p.id',
-                'operator' => '>',
-                'value' => 1,
-            ],
-            [
-                'field' => 'p.author_id',
-                'operator' => '=',
-                'value' => 2,
-            ]
-        ]);
+        $this->select->andWhere([[
+                    'field' => 'id',
+                    'operator' => '=',
+                    'value' => $id,
+                ]]);
+        return $this->select->execute();
+    }
+    public function findAll(): ?array
+    {
+        $this->select->setTableName(['p' => 'post']);
+        $this->select->setField('p.id, p.author_id, u.fullName, p.title, p.body');
+        $this->select->join()->inner([[
+            'table' => ['u' => 'user'],
+            'condition' => 'u.id = p.author_id'
+        ]]);
+
+        
+        // $this->select->andWhere([
+        //     [
+        //         'field' => 'id',
+        //         'operator' => '>',
+        //         'value' => 1,
+        //     ],
+        //     [
+        //         'field' => 'author_id',
+        //         'operator' => '=',
+        //         'value' => 2,
+        //     ]
+        // ]);
 
 
         //    $this->select->andWhere('author_id=1');
