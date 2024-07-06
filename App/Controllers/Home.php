@@ -9,7 +9,6 @@ use PDO;
 
 class Home
 {
-
     public function index() :void
     {
         $post = new Post();
@@ -19,13 +18,36 @@ class Home
 
     public function create() :void
     {
-
+        $data = array_filter($_POST);
+        if (!empty($data)) {
+            $post = new Post();
+            $post->insert($data);
+            header('Location: /');
+        }
+        Viewer::view("home/create");
     }
+
 
     public function update() :void
     {
+        $id = $_GET['id'] ?? NULL;
+        $post = new Post();
+        $data = [];
         
+        if ($id != NULL) {
+            $data = $post->findOneUpdate($id);
+        
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $postContent = [];
+                $postContent = array_filter($_POST);
+                $post->update($id, $postContent);
+                header('Location: /');
+            }
+        }
+        Viewer::view("home/update", $data);
     }
+    
+
 
     public function delete() :void
     {
@@ -37,18 +59,6 @@ class Home
         }
         header('Location: /');
     }
-
-    public function insert() : void
-    {
-        $postContent = $_POST;
-        $post = new Post();
-        $post->insert($postContent);
-
-        var_dump( $_POST);
-       header('Location: /');
- 
-    }
     
-
 }
 

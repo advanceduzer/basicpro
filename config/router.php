@@ -12,6 +12,8 @@ return [
     "/home/" => 'Home:index',
     "/" => 'Home:index',
     "/home/delete" => 'Home:delete',
-    "/home/insert" => 'Home:insert',
+    "/home/create" => 'Home:create',
+    "/home/update" => 'Home:update',
+    "/home/update/" => 'Home:update',
     "/error" => 'Error:index'
 ];

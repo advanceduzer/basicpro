@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace App\Orm;
 
 use PDO;
 
-class Insert extends Sql
+class Update extends Sql
 {
     private array $postContent;
 
@@ -18,30 +18,30 @@ class Insert extends Sql
         $this->postContent = $postContent;
     }
 
-    public function getPostContent()
+    public function getPostContent(): array
     {
         if (is_array($this->postContent)) {
-            
-            $keys = array_keys($this->postContent);
-            $values = array_values($this->postContent);
-            
-            $cols = implode(", ", $keys);
-            $vals = "'" . implode("', '", $values) . "'";
-            
-            return ['cols' => $cols, 'vals' => $vals];
-            
+            $updateFields = [];
+            foreach ($this->postContent as $key => $value) {
+                $updateFields[] = "$key = '$value'";
+            }
+            return $updateFields;
         } else {
-            return $this->postContent;
+            return [];
         }
     }
 
     public function build(): string
     {
         $postContent = $this->getPostContent();
-
         $sql = 
-        "INSERT INTO " . $this->getTableName(). 
-        " (" . $postContent['cols'] . ") VALUES (" . $postContent['vals'] . ");";
+        "UPDATE " . $this->getTableNameWithoutAlias() . 
+        " AS " . $this->tableAlias . 
+        " SET " . implode(", ", $postContent);
+
+        if (!empty($this->where->getWhere())) {
+            $sql .= " WHERE " . $this->where->getWhere();
+        }
         return $sql;
     }
 
@@ -49,5 +49,4 @@ class Insert extends Sql
     {
         $this->connect->exec($this->build());
     }
-
 }

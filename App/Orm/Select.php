@@ -4,51 +4,24 @@ namespace App\Orm;
 
 use PDO;
 
-class Select
+class Select extends Sql
 {
-    private string $tableAlias = '';
     private string|array $field = '*';
-    private string|array $tableName = '';
     private string|array $groupBy = '';
     private string|array $orderBy = '';
     private string $limit = '';
 
-    //private string $mainAlias = '';
-
-
-    private PDO $connect;
-    private Where $where;
     private Join $join;
-
 
     public function __construct()
     {
-        $this->connect = (new Connect())->getConnect();
-        $this->where = new Where();
+        parent::__construct();
         $this->join = new Join();
-        // var_dump($this->where);
     }
 
     public function setField($field): void
     {
         $this->field = $field;
-    }
-
-    public function setTableName($tableName): void
-    {
-        if (is_array($tableName)){
-            foreach ($tableName as $alias => $name){
-                $this->tableAlias = $alias;
-                $this->tableName = $name;
-                break;
-            }
-
-        } else {
-            $this->tableName = $tableName;
-            $this->tableAlias = $tableName;
-        }
-        $this->where->setTableAlias($this->tableAlias);
-
     }
 
     public function setOrderBy($orderBy): void
@@ -71,11 +44,6 @@ class Select
         if (!is_array($this->field)) {
             return $this->field;
         }
-    }
-
-    public function getTableName()
-    {
-        return $this->tableName. ' ' . $this->tableAlias;
     }
 
     public function getOrderBy()
@@ -103,16 +71,6 @@ class Select
         return $this->limit;
     }
 
-    public function andWhere(string|array $condition): void
-    {
-        $this->where->andWhere($condition);
-    }
-
-    public function orWhere(string|array $condition): void
-    {
-        $this->where->orWhere($condition);
-    }
-
     public function getJoin()
     {
         return $this->join->getJoin();
@@ -123,13 +81,12 @@ class Select
         return $this->join;
     }
 
-
     public function build(): string
     {
         $sql =
             "SELECT " . $this->getField() .
             " FROM " . $this->getTableName();
-            
+
         if (!empty($this->getJoin())) {
             $sql .= " " . $this->getJoin();
         }
@@ -146,11 +103,6 @@ class Select
         if (!empty($this->getLimit())) {
             $sql .= " LIMIT " . $this->getLimit();
         }
-
-
-
-
-
         var_dump($sql);
 
         return $sql;
