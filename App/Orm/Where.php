@@ -17,7 +17,6 @@ class Where
         return $this->tableAlias;
     }
 
-
     public function andWhere(string|array $conditions): void
     {
         if (!empty($this->conditions)) {
@@ -26,9 +25,10 @@ class Where
         if (is_array($conditions)) {
             $whereItem =[];
             foreach ($conditions as $condition) {
-                $whereItem[] = $this->tableAlias . '.' . $condition['field'] . $condition['operator'] . $condition['value'];
-
-
+                $whereItem[] = $this->tableAlias . '.' .
+                             $condition['field'] . 
+                             $condition['operator'] . 
+                             $condition['value'];
             }
              $this->conditions .= implode(" AND ", $whereItem);
 

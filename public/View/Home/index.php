@@ -4,9 +4,18 @@
 <head>
     <title>Home - Index</title>
 </head>
-
+<style>*{
+    padding:2px;
+    margin: 5px;
+}
+</style>
 <body>
     <p>Home - Index</p>
+
+    <p>
+    <a href="/home/create">create</a>
+</p>
+
     <table style="text-align:left;">
         <tr>
             <th style="font-weight:700">Post ID</th>
@@ -19,7 +28,6 @@
 
         </tr>
         <?php foreach ($data as $key => $row) : ?>
-
             <tr>
                 <td><?= isset($row['id']) ? $row['id'] : '' ?></td>
                 <td><?= isset($row['author_id']) ? $row['author_id'] : '' ?></td>
@@ -31,18 +39,7 @@
             </tr>
         <?php endforeach ?>
     </table>
-
-
-    <p>Add post</p>
-
-    <form name="form" action="/home/insert" method="post">
-        <input type="input" name="author_id" id="author_id" value="" placeholder="author_id">
-        <input type="input" name="title" id="title" value="" placeholder="title">
-        <input type="input" name="body" id="body" value="" placeholder="body">
-        <button type="submit" name="submit">Add post</button>
-    </form>
-
-
+    
 
 
 </html>
